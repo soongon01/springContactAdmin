@@ -1,7 +1,14 @@
 package kr.or.kosta.contact.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import kr.or.kosta.contact.model.Contact;
 
@@ -14,10 +21,29 @@ import kr.or.kosta.contact.model.Contact;
  * @author user
  *
  */
+
+@Repository("contactDao")
 public class ContactsDao {
 	
+	@Autowired
+	private DataSource dataSource;
+	
 	public void insertContact(Contact contact) {
-		System.out.println("resgist ok..");
+		
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			System.out.println("connection borrowed..");
+		}
+		catch (SQLException se) {
+			se.printStackTrace();
+		}
+		finally {
+			try {
+				conn.close();
+				System.out.println("connection released..");
+			} catch (Exception e) {}
+		}
 	}
 	
 	public Contact selectContactById(int id) {
